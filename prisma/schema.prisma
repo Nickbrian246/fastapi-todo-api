@@ -1,0 +1,50 @@
+// generator
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = 5
+  interface            = "asyncio"
+}
+// database
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_POSTGRES")
+}
+
+
+enum Origin {
+  GOOGLE
+  OWN
+}
+
+enum Status {
+  BLOCK
+  ACTIVE
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+// type ToDo {
+//   toDoId String
+//   name   String
+//   status Boolean
+//   label  String?
+// }
+
+model User {
+  id         Int        @id @default(autoincrement())
+  name       String
+  familyName String
+  email      String  @unique
+  password   String?
+  origin     Origin  @default(OWN)
+  ToDos      Json
+  status     Status @default(ACTIVE)
+  role       Role   @default(USER)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
