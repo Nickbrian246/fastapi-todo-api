@@ -1,10 +1,12 @@
 {
   "cSpell.words": [
+    "ASGI",
     "dotenv",
     "fastapi",
     "passlib",
     "pydantic",
     "signin",
-    "Signin"
+    "Signin",
+    "starlette"
   ]
 }
