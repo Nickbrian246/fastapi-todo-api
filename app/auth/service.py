@@ -24,7 +24,6 @@ async def signupUser (userCredentials:SignUpUser)->ApiSuccessResponseAccessToken
 
 @authErrorHandler
 async def signinUser (userCredentials:Signin)->ApiSuccessResponseAccessToken:
-    print({"email":userCredentials.email, "password":userCredentials.password})
     userInDB = await  prisma_connection.prisma.user.find_unique_or_raise({"email":userCredentials.email})
 
     decodedPassword = verify_password(userCredentials.password,userInDB.password)

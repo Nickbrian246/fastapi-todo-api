@@ -1,8 +1,10 @@
 from typing import Union
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from  app.auth.controller import auth
+from app.auth.controller import auth
+from app.todos.controller import todos
 from config.connection import prisma_connection
+from app.middlewares.decode_jwt_middleware import DecodeJwtMiddleware
 
 
 @asynccontextmanager
@@ -13,7 +15,11 @@ async def lifespan(app: FastAPI):
     # Desconectar de la base de datos cuando la aplicación se apaga
     await prisma_connection.disconnect()
 app = FastAPI(lifespan=lifespan)
+
+# app.add_middleware(DecodeJwtMiddleware)
 app.include_router(auth)
+app.include_router(todos)
+
 
 @app.get("/")
 def read_root():
