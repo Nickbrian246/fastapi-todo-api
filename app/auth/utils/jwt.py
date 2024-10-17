@@ -1,7 +1,7 @@
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException, status
 import jwt
-from jwt.exceptions import InvalidTokenError
+from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from datetime import datetime, timedelta, timezone
 import os
 from dotenv import load_dotenv
@@ -36,9 +36,14 @@ def get_current_user(token: str = Depends(oauth2_scheme))->DecodedToken:
     try:
         payload = decodeAccessToken(token)
         return payload 
-    except InvalidTokenError:
+    except ExpiredSignatureError :
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token expired please signin again",
+            
+        )
+    except InvalidTokenError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
         )
